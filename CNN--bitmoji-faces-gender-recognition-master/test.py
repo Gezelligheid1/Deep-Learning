@@ -9,6 +9,7 @@ from torch import nn
 from d2l import torch as d2l
 import numpy as np
 from model import *
+from torchvision.models import densenet
 
 demo = False
 
@@ -80,7 +81,7 @@ print("start train")
 loss = nn.CrossEntropyLoss(reduction="none")
 
 devices, num_epochs, lr, wd = d2l.try_all_gpus(), 30, 2e-4, 5e-4
-lr_period, lr_decay, net = 4, 0.9, DenseNet([6, 12, 48, 32], k=32, theta=0.5, num_classes=1000)
+lr_period, lr_decay, net = 4, 0.9, torchvision.models.densenet121(pretrained=True, progress=True)
 
 def train(net, train_iter, valid_iter, num_epochs, lr, wd, devices, lr_period, lr_decay):
     trainer = torch.optim.SGD(net.parameters(), lr=lr, momentum=0.9,
@@ -118,7 +119,7 @@ def train(net, train_iter, valid_iter, num_epochs, lr, wd, devices, lr_period, l
                      f' examples/sec on {str(devices)}')
 
 
-net, preds = DenseNet([6, 12, 48, 32], k=32, theta=0.5, num_classes=1000), []
+net, preds = torchvision.models.densenet121(pretrained=True, progress=True), []
 
 train(net, train_valid_iter, None, num_epochs, lr, wd, devices, lr_period,
       lr_decay)
